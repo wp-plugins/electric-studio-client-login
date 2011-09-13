@@ -87,5 +87,3 @@ function electric_studio_client_login()
 {
   echo get_option('OPTION_NAME');
 }
-
-?>

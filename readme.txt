@@ -3,7 +3,7 @@ Contributors: irvingswiftj, Electric Studio
 Tags: clients, users, roles
 Requires at least: 3.1
 Tested up to: 3.2.1
-Stable tag: 0.5
+Stable tag: trunk
 
 A plugin that creates groups for users and allows you to change the content (with use of shortcodes) to change content depending on which user is logged in.
 
