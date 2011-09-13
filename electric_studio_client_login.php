@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Electric Studio Client Longin
+Plugin Name: Electric Studio Client Login
 Plugin URI: http://www.electricstudio.co.uk
 Description: Give clients a login area and allow administrators to control what content is viewable by which users
 Version: 0.5
