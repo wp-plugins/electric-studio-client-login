@@ -16,10 +16,11 @@ With the [escl_logged_in] shortcode, you can specify only for a certain user or 
 i.e. To show content only to user 'joebloggs':
 - [escl_logged_in user="joebloggs"]content[/escl_logged_in]
 
-And to show content only to groups 'group1' and 'group2':
+And to show content only to groups 'group1' and 'group2' (When using multiple groups, the groups must be separated by a '|'):
 - [escl_logged_in group="group1|group2"]content[/escl_logged_in]
 
-N.B. When using multiple groups, the groups must be separated by a '|'.
+N.B. This is a beta version. The more feedback we get, the quicker we can make it into a stable version.
+
 
 == Installation ==
 
