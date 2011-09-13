@@ -14,10 +14,10 @@ Add users by using the standard User management in wordpress. Just set them to t
 Use shortcode [escl_logged_in]content[/escl_logged_in] to make content available only to logged in users.
 With the [escl_logged_in] shortcode, you can specify only for a certain user or certain groups by using the attributes 'user' and 'group'.
 i.e. To show content only to user 'joebloggs':
-- [escl_logged_in user="joebloggs"]content[/escl_logged_in]
+* [escl_logged_in user="joebloggs"]content[/escl_logged_in]
 
 And to show content only to groups 'group1' and 'group2' (When using multiple groups, the groups must be separated by a '|'):
-- [escl_logged_in group="group1|group2"]content[/escl_logged_in]
+* [escl_logged_in group="group1|group2"]content[/escl_logged_in]
 
 N.B. This is a beta version. The more feedback we get, the quicker we can make it into a stable version.
 
