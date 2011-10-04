@@ -3,7 +3,7 @@
 Plugin Name: Electric Studio Client Login
 Plugin URI: http://www.electricstudio.co.uk
 Description: Give clients a login area and allow administrators to control what content is viewable by which users
-Version: 0.5
+Version: 0.7
 Author: James Irving-Swift
 Author URI: http://www.irving-swift.com
 License: GPL2
@@ -28,7 +28,7 @@ if($missingFiles){
 	foreach($templateArray as $templateFile){
 		$data = file_get_contents($pluginTemplateDir.$templateFile);
 		$handle = fopen($themeDir.$templateFile, "w");
-		echo $themeDir.$templateFile;
+		//echo $themeDir.$templateFile;
 		fwrite($handle, $data);
 		fclose($handle);
 	}
@@ -87,3 +87,6 @@ function electric_studio_client_login()
 {
   echo get_option('OPTION_NAME');
 }
+
+
+

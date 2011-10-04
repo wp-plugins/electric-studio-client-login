@@ -5,8 +5,9 @@ function electric_studio_client_login_install() {
 	global $wpdb;
 	
 	/* Creates new database field */
-	add_option("escl_verison", '0.1', '', 'yes');
+	add_option("escl_verison", '0.7', '', 'yes');
 	
+    add_option("escl_fields", array());
 	
 	$sqlCreateGroupsTable = "CREATE TABLE ".$wpdb->prefix."escl_user_group (
 	  group_id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -71,5 +72,7 @@ function electric_studio_client_login_remove() {
 	  wp_delete_post($mypageid, $force_delete);
 	
 	delete_option('escl_verison');
+    
+    delete_option("escl_fields");
 }
 

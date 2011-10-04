@@ -16,19 +16,36 @@ function escl_list_groups($searchTerm = ""){
 	return $wpdb->get_results($sql);
 }
 
+//lists all the users in a group
 function escl_list_users_in_group($groupslug){
 	global $wpdb;
 	
 	$groupinfo = escl_get_group_data($groupslug);
 	
-	$sql = "SELECT users.ID, users.user_login, users.user_nicename FROM wp_users as users
-	INNER JOIN wp_escl_user_group_rel as rel ON users.user_login = rel.user_login WHERE rel.group_id = $groupinfo->group_id";
+	$sql = "SELECT users.ID, users.user_login, users.user_nicename FROM $wpdb->users as users
+	INNER JOIN ".$wpdb->prefix."escl_user_group_rel as rel ON users.user_login = rel.user_login WHERE rel.group_id = $groupinfo->group_id";
 	
 	$sql = $wpdb->prepare($sql);
 	
 	$userlist = $wpdb->get_results($sql);
 	
 	return $userlist;
+}
+
+//lists all groups user is a member of
+function escl_list_users_group($userid){
+    global $wpdb;
+    
+    $sql = "SELECT group_name FROM $wpdb->users as users
+    INNER JOIN ".$wpdb->prefix."escl_user_group_rel as rel ON users.user_login = rel.user_login
+    INNER JOIN ".$wpdb->prefix."escl_user_group as grp ON rel.group_id = grp.group_id
+        WHERE users.ID = $userid";
+    
+    $sql = $wpdb->prepare($sql);
+    
+    $userlist = $wpdb->get_results($sql);
+    
+    return $userlist;
 }
 
 function escl_add_group($groupName, $groupStatus, $groupSlug = ""){
