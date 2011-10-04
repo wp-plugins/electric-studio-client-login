@@ -50,7 +50,6 @@ function escl_redirect_to_login(){
 	$post_id = $wp_query->post->ID;
 	$groupsAllowed = get_post_meta($post_id, '_escl_groups');
 	if($user_level < 10) //check that this is not the admin logged in
-        print_r($groupsAllowed);
 		if((is_array($groupsAllowed[0]) && escl_user_in_group($user_identity,$groupsAllowed[0])==false))
             //if user is not allowed to view this page, redirect to login
 			wp_redirect(wp_login_url(get_permalink($post_id)));
