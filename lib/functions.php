@@ -14,7 +14,7 @@ function escl_custom_login(){ ?>
 				<?php endif // $user_level >= 1 ?>
 				<li><a href="<?php echo escl_get_client_area_perm(); ?>"><?php echo __('My Area')?></a></li>
 				<li><a href="<?php bloginfo('url') ?>/wp-admin/profile.php"><?php echo __('Edit Profile')?></a></li>
-				<li><a href="<?php bloginfo('url') ?>/wp-login.php?action=logout&amp;redirect_to=<?php echo urlencode($_SERVER['REQUEST_URI']) ?>"><?php echo __('Log Out')?></a></li>
+				<li><?php escl_logout_link(); ?></li>
 			</ul>
 	
 			<?php else : ?>
@@ -64,3 +64,11 @@ function escl_get_client_area_perm(){
 	return get_permalink($pageID);
 }
 
+function escl_logout_link(){
+    $vals = get_option('escl_general_settings');
+    if($vals['escl_logout_redirect'] == 1){?>
+        <a href="<?php echo wp_logout_url( get_bloginfo('url') ); ?>" title="Logout">Logout</a>	
+    <?php }else{ ?>
+    	<a href="<?php echo wp_logout_url( get_permalink() ); ?>" title="Logout">Logout</a>	
+    <?php }
+}
