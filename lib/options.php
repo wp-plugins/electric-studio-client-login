@@ -20,6 +20,10 @@ function escl_home(){ ?>
         <div class="icon32" id="icon-tools"> <br /> </div>
         <h2>Client Login Plugin</h2>
         <p><?php _e('Change the settings of this plugin here.'); ?></p>
+        <form action='options.php' method='POST'>
+            <?php settings_fields('escl_general_settings'); ?>
+            <?php do_settings_sections('escl_general_settings'); ?>
+        </form>
         <p>N.B. This is a beta version, if you find any bugs, please leave a comment on our website or mail me at <a href="mailto:james@electricstudio.co.uk">james@electricstudio.co.uk</a></p>
         <p>Plugin Created By <a href="http://www.electricstudio.co.uk/">Electric Studio</a> | Get great hosting from <a href="http://www.electrichosting.co.uk/">Electric Hosting</a></p>
     </div>
@@ -213,13 +217,17 @@ function register_and_build_escl_options(){
 	register_setting('escl_add_group','escl_add_group', 'validate_escl_group_name');
 	register_setting('escl_edit_group','escl_edit_group', 'validate_escl_group_name');
 	register_setting('escl_delete_group','escl_delete_group', 'validate_escl_group_name');
+    register_setting('escl_general_settings','escl_general_settings');
 
+    add_settings_section('escl_general_settings', 'General Settings','escl_general_setting_text','escl_general_settings');
 	add_settings_section('add_group', 'Add A Group','escl_add_group_section_text','escl_add_group');
 	add_settings_section('delete_group', 'Delete Group','escl_delete_group_section_text','escl_delete_group');
 	add_settings_section('manage_group', 'Manage A Group','escl_manage_group_section_text','escl_add_group');
 	add_settings_section('edit_group', 'Edit A Group','escl_edit_group_section_text','escl_edit_group');
 	add_settings_section('edit_group_users', 'Edit Group Users', 'escl_add_group_user_section_text','escl_edit_group');
 
+    add_settings_field('logout_redirect','Log Out Redirect (Redirect to Homepage on Logout):','escl_logout_redirect','escl_general_settings','escl_general_settings');
+    add_settings_field('general_submit','','escl_submit','escl_general_settings','escl_general_settings');    
 	add_settings_field('group_name','Group Name: ','escl_group_name','escl_add_group','add_group');
 	add_settings_field('group_name','Group Name: ','escl_group_name','escl_edit_group','edit_group');
 	add_settings_field('group_slug','Group Slug (optional): ','escl_group_slug','escl_add_group','add_group');
@@ -256,6 +264,10 @@ function escl_manage_group_section_text(){
 
 function escl_add_group_user_section_text(){
 	echo "Manage the group's users here";
+}
+
+function escl_general_setting_text(){
+	echo "Manage the plugin's General Settings";
 }
 
 function escl_delete_group_section_text(){
@@ -320,6 +332,13 @@ function escl_add_user(){
 	<div id="user-search-results" style="display:none"></div>
 	<div id="current-group-users">
 	<?php
+}
+
+function escl_logout_redirect(){
+  $vals = get_option('escl_general_settings');
+  $option = "<input name=\"escl_general_settings[escl_logout_redirect]\" " .
+        " type=\"checkbox\" value=\"1\" " . checked( 1, $vals['escl_logout_redirect'], false ) . " />";
+  echo $option;	
 }
 
 function escl_list_current_members(){ ?>

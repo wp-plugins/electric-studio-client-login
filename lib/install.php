@@ -6,7 +6,7 @@ function electric_studio_client_login_install() {
 	
 	/* Creates new database field */
 	add_option("escl_verison", '0.7', '', 'yes');
-	
+	add_option("escl_general_settings", array());
     add_option("escl_fields", array());
 	
 	$sqlCreateGroupsTable = "CREATE TABLE ".$wpdb->prefix."escl_user_group (

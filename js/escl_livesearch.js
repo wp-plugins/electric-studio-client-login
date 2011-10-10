@@ -9,7 +9,7 @@ jQuery(function($){
 	
 	$('a.liveUserResult').live('click', function(){
 		var classname = $(this).parent('li').attr('class');
-		var userid = classname.split('-'), userid = userid[1];
+		var userid = classname.split('-'), userid = userid[userid.length-1];
 		escl_addusertogroup(userid);
 		return false;
 	});
