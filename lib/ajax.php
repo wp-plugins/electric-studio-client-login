@@ -2,7 +2,7 @@
 
 if( is_admin() ){
 	//add ajax hooks if logged in as admin
-	add_action('wp_print_footer_scripts','escl_print_livesearchjs');
+	add_action('admin_print_footer_scripts','escl_print_livesearchjs');
 	add_action('wp_ajax_nopriv_esclusersearch','escl_userlivesearch');
 	add_action('wp_ajax_esclusersearch','escl_userlivesearch');
 	add_action('wp_ajax_nopriv_escladdusertogroup','escl_addusertogroup');
