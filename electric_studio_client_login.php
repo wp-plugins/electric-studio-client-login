@@ -3,7 +3,7 @@
 Plugin Name: Electric Studio Client Login
 Plugin URI: http://www.electricstudio.co.uk
 Description: Give clients a login area and allow administrators to control what content is viewable by which users
-Version: 0.7.5
+Version: 0.7.7
 Author: James Irving-Swift
 Author URI: http://www.irving-swift.com
 License: GPL2
@@ -33,7 +33,6 @@ if($missingFiles){
 		fclose($handle);
 	}
 }
-
 include 'lib/install.php';
 include 'lib/options.php';
 include 'lib/functions.php';
@@ -42,12 +41,21 @@ include 'lib/user.php';
 include 'lib/ajax.php';
 include 'lib/metabox.php';
 
-
 /* Runs when plugin is activated */
-register_activation_hook(__FILE__,'electric_studio_client_login_install'); 
+register_activation_hook(ABSPATH.PLUGINDIR.'/electric-studio-client-login/electric_studio_client_login.php','escl_activate'); 
 
 /* Runs on plugin deactivation*/
-register_deactivation_hook( __FILE__, 'electric_studio_client_login_remove' );
+register_deactivation_hook(ABSPATH.PLUGINDIR.'/electric-studio-client-login/electric_studio_client_login.php', 'escl_deactivate' );
+
+function escl_activate(){
+    //syslog(LOG_ERR,"activating plugin");
+    electric_studio_client_login_install();
+}
+
+function escl_deactivate(){
+    //syslog(LOG_NOTICE,"plugin deactivated");
+    electric_studio_client_login_remove();
+}
 
 function escl_init(){
 	if(is_admin()){

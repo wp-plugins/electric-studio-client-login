@@ -1,5 +1,4 @@
 <?php
-
 function electric_studio_client_login_install() {
 	global $plugindir;
 	global $wpdb;
