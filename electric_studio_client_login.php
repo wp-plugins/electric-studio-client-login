@@ -33,7 +33,6 @@ if($missingFiles){
 		fclose($handle);
 	}
 }
-
 include 'lib/install.php';
 include 'lib/options.php';
 include 'lib/functions.php';
@@ -42,12 +41,21 @@ include 'lib/user.php';
 include 'lib/ajax.php';
 include 'lib/metabox.php';
 
-
 /* Runs when plugin is activated */
-register_activation_hook(__FILE__,'electric_studio_client_login_install'); 
+register_activation_hook(ABSPATH.PLUGINDIR.'/electric-studio-client-login/electric_studio_client_login.php','escl_activate'); 
 
 /* Runs on plugin deactivation*/
-register_deactivation_hook( __FILE__, 'electric_studio_client_login_remove' );
+register_deactivation_hook(ABSPATH.PLUGINDIR.'/electric-studio-client-login/electric_studio_client_login.php', 'escl_deactivate' );
+
+function escl_activate(){
+    //syslog(LOG_ERR,"activating plugin");
+    electric_studio_client_login_install();
+}
+
+function escl_deactivate(){
+    //syslog(LOG_NOTICE,"plugin deactivated");
+    electric_studio_client_login_remove();
+}
 
 function escl_init(){
 	if(is_admin()){
