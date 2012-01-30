@@ -3,7 +3,7 @@ Contributors: irvingswiftj, Electric Studio
 Tags: clients, users, roles, groups
 Requires at least: 3.1
 Tested up to: 3.3.1
-Stable tag: 0.7.6
+Stable tag: 0.7.7
 
 A plugin that creates groups for users and allows you to change the content (with use of shortcodes) to change content depending on which user is logged in.
 
@@ -64,6 +64,9 @@ On activation of this plug, a template file is copy to your theme folder. Theref
 = 0.7.6 =
 * Wordpress 3.3 bug fixed
 
+- 0.7.7 =
+* Activation and deactivation bug fix
+
 == Upgrade Notice ==
 
 = 0.5 =
@@ -83,3 +86,6 @@ This is the 1st Beta.
 
 = 0.7.6 =
 * Wordpress 3.3 bug fixed
+
+= 0.7.7 =
+* Activation and deactivation bug fix
