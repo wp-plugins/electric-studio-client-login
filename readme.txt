@@ -64,8 +64,11 @@ On activation of this plug, a template file is copy to your theme folder. Theref
 = 0.7.6 =
 * Wordpress 3.3 bug fixed
 
-- 0.7.7 =
+= 0.7.7 =
 * Activation and deactivation bug fix
+
+= 0.8 =
+* Deletes tables on uninstall
 
 == Upgrade Notice ==
 
@@ -89,3 +92,6 @@ This is the 1st Beta.
 
 = 0.7.7 =
 * Activation and deactivation bug fix
+
+= 0.8 =
+* Deletes tables on uninstall
