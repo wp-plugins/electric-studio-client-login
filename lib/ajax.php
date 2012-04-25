@@ -94,6 +94,7 @@ class Escl_ajax{
     					jQuery('ul#group-user-list li.userid-' + userid).fadeOut(function () {
     						jQuery(this).remove();
     					});
+    					alert(html);
     				},
     				error: function () {
     					alert('There has been an error, Please try again');
@@ -106,7 +107,7 @@ class Escl_ajax{
     
     function userlivesearch(){
     	wp_nonce_field('esclLS');
-    	$clients = get_users(array(
+    	$clients = escl_get_users(array(
     		'role' => 'client',
     		'search' => '*'.$_POST['criteria'].'*'
     		)
@@ -124,21 +125,18 @@ class Escl_ajax{
     
     function addusertogroup(){
     	wp_nonce_field('esclu2gadd');
+    	$user = new Escl_user($_POST['userid']);
     	$groupinfo = Escl_groups::get_group_data($_POST['groupslug']);
-    	$userid = $_POST['userid'];
-    	$userinfo = get_userdata($userid);
-    	Escl_groups::add_user_to_group($groupinfo->group_id,$userinfo->user_nicename);
-    	
-    	echo $userinfo->user_login;
+    	$user->addToGroup($groupinfo->group_id);
+    	echo $user->get('user_login');
     	die;
     }
     
     function removeuserfromgroup(){
     	wp_nonce_field('esclufgrm');
+    	$user = new Escl_user($_POST['userid']);
     	$groupinfo = Escl_groups::get_group_data($_POST['groupslug']);
-    	$userid = $_POST['userid'];
-    	$userinfo = get_userdata($userid);
-    	Escl_groups::remove_user_from_group($groupinfo->group_id,$userinfo->user_login);
+    	$user->RemoveFromGroup($groupinfo->group_id);
     	die;	
     }
 

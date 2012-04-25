@@ -111,31 +111,6 @@ class Escl_groups{
     	return $result[0];
     }
     
-    function add_user_to_group($groupid,$userlogin){
-    	global $wpdb;
-    	
-    	$groupinfo = self::get_group_data_from_id($groupid);
-    	
-    	$sql = "INSERT INTO ".$wpdb->prefix."escl_user_group_rel (group_id, user_login)
-    			VALUES ($groupid,'$userlogin')";
-    	
-    	$sql = $wpdb->prepare($sql);
-    	
-    	if(!self::user_in_group($userlogin,$groupinfo->group_slug)){ //check that user does not already exist in group
-    		$wpdb->query($sql);
-    	}
-    }
-    
-    function remove_user_from_group($groupid,$userlogin){
-    	global $wpdb;
-    	
-    	$sql = "DELETE FROM ".$wpdb->prefix."escl_user_group_rel WHERE group_id = '$groupid' and user_login = '$userlogin'";
-    	
-    	$sql = $wpdb->prepare($sql);
-    	
-    	$wpdb->query($sql);
-    }
-    
     function user_in_group($user, $groups){
     	global $wpdb;
     	
@@ -165,10 +140,12 @@ class Escl_groups{
     	
     	//first we need to delete all the relationships involving that group
     	$sqlRmRels = "DELETE FROM ".$wpdb->prefix."escl_user_group_rel WHERE group_id='$groupinfo->group_id'";
+    	//prepare the query from filthy hackers!
     	$sqlRmRels = $wpdb->prepare($sqlRmRels);
     	
     	//now we delete the group
     	$sqlRmGroup = "DELETE FROM ".$wpdb->prefix."escl_user_group WHERE group_id='$groupinfo->group_id'";
+    	//prepare the query from filthy hackers!
     	$sqlRmGroup = $wpdb->prepare($sqlRmGroup);
     	
     	//perform both queries
@@ -176,4 +153,37 @@ class Escl_groups{
     	$wpdb->query($sqlRmGroup);
     }
 
+    /**
+     * 
+     * Method to update a group
+     * @param string $groupSlug
+     * @param string $groupName
+     * @param string $groupStatus
+     * @return N/A
+     * @since 0.8
+     */
+    function update_group($groupSlug, $groupName = "", $groupStatus = ""){
+        global $wpdb;
+
+        //start query construction
+        $q = "UPDATE ".$wpdb->prefix."escl_user_group ";
+        $q .= "SET group_slug='$groupSlug'";
+        //check if groupName needs updating
+        if($groupName != "")
+            //add the change to groupName to the query
+            $q .= ", group_name='$groupName'";
+        //check if the groupStatus needs updating
+        if($groupStatus != "")
+            //add the change to groupStatus to the query
+            $q .= ", group_status='$groupStatus'";
+        //limit the changes to only groups with the matching slug (else we would have a slight problem!!)
+        $q .= " WHERE group_slug='$groupSlug'";
+        
+        //prepare query from anonymous!
+        $q = $wpdb->prepare($q);
+        
+        //lets execute this query! BOOM!
+        $wpdb->query($q);
+    }
+    
 }
