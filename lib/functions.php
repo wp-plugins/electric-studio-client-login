@@ -6,8 +6,8 @@ class Escl_functions{
         add_shortcode('escl_logged_in', array(&$this,'is_logged_in'));
         add_shortcode('escl_login_panel',array(&$this,'custom_login'));
         add_shortcode('escl-login', array(&$this,'custom_login'));
-        add_action('template_redirect',array(&$this,'redirect_to_login'));
-        add_action("plugins_loaded",array(&$this,"widget_init"));    
+        add_action("plugins_loaded",array(&$this,"widget_init"));  
+        add_action('wp_head',array(&$this,'redirect_to_login'));
     }
 
     function widget_init(){
@@ -18,7 +18,6 @@ class Escl_functions{
     		array('description' => 'Places a login form in the sidebar')
     	);
     }
-
     
     // [escl_logged_in]foo[/escl_logged_in]
     function is_logged_in($atts, $content=null){
@@ -75,9 +74,10 @@ class Escl_functions{
     	$post_id = $wp_query->post->ID;
     	$groupsAllowed = get_post_meta($post_id, '_escl_groups');
     	if($user_level < 10) //check that this is not the admin logged in
-    		if((is_array($groupsAllowed[0]) && escl_user_in_group($user_identity,$groupsAllowed[0])==false))
-                //if user is not allowed to view this page, redirect to login
-    			wp_redirect(wp_login_url(get_permalink($post_id)));
+    	    if(is_singular()) //check that this is a single post
+        		if((is_array($groupsAllowed[0]) && Escl_groups::user_in_group($user_identity,$groupsAllowed[0])==false))
+                    //if user is not allowed to view this page, redirect to login
+        			wp_redirect(wp_login_url(get_permalink($post_id)));
     }
 
     /**
@@ -101,13 +101,17 @@ class Escl_functions{
     	
     			<?php else : ?>
     	
-    			<form action="<?php bloginfo('url') ?>/wp-login.php" method="post">
+    			<form action="<?php bloginfo('url') ?>/wp-login.php" id="escl-login-form" method="post">
     				<p>
-    				<label for="log"><input type="text" name="log" id="log" value="<?php echo esc_html(stripslashes($user_login), 1) ?>" size="22" /> User</label><br />
-    				<label for="pwd"><input type="password" name="pwd" id="pwd" size="22" /> Password</label><br />
-    				<input type="submit" name="submit" value="Send" class="button" />
-    				<label for="rememberme"><input name="rememberme" id="rememberme" type="checkbox" checked="checked" value="forever" /> Remember me</label><br />
+    					<label for="log">User</label>
+    					<input type="text" name="log" id="log" value="<?php echo esc_html(stripslashes($user_login), 1) ?>" size="22" />
+					</p>
+					<p>
+    					<label for="pwd">Password</label>
+    					<input type="password" name="pwd" id="pwd" size="22" />
     				</p>
+    				<input type="submit" name="submit" value="Send" class="button" />
+    				<label for="rememberme"><input name="rememberme" id="rememberme" type="checkbox" checked="checked" value="forever" /> Remember me</label>
     				<input type="hidden" name="redirect_to" value="<?php echo $_SERVER['REQUEST_URI']; ?>"/>
     			</form>
     			<ul>

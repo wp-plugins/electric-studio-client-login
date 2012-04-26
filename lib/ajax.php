@@ -55,7 +55,7 @@ class Escl_ajax{
     				data: {
     					action: 'escladdusertogroup',
     					userid: userid,
-    					groupslug: '<?php echo $_GET['edit_group']; ?>',
+    					groupslug: '<?php echo $_GET['escl_slug']; ?>',
     					_ajax_nonce: '<?php echo $esclu2gadd_nonce; ?>'
     				},
     				beforeSend: function () {
@@ -81,7 +81,7 @@ class Escl_ajax{
     				data: {
     					action: 'esclremoveuserfromgroup',
     					userid: userid,
-    					groupslug: '<?php echo $_GET['edit_group']; ?>',
+    					groupslug: '<?php echo $_GET['escl_slug']; ?>',
     					_ajax_nonce: '<?php echo $esclufgrm_nonce; ?>'
     				},
     				beforeSend: function () {

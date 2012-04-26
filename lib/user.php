@@ -18,7 +18,7 @@ class Escl_user extends WP_User{
     	
     	$sql = "INSERT INTO ".$wpdb->prefix."escl_user_group_rel (group_id, user_login)
     			VALUES ($groupid,'".$user->user_login."')";
-    	
+
     	$sql = $wpdb->prepare($sql);
     	
     	if(!Escl_groups::user_in_group($userlogin,$groupinfo->group_slug)){ //check that user does not already exist in group

@@ -405,7 +405,7 @@ class Escl_options{
     function list_current_members(){ ?>
     	<ul id="group-user-list">
         	<?php
-        	$groupusers = Escl_groups::list_users_in_group($_GET['edit_group']);
+        	$groupusers = Escl_groups::list_users_in_group($_GET['escl_slug']);
         	foreach($groupusers as $groupuser){
         		echo "<li class=\"group-user userid-".$groupuser->ID."\">".$groupuser->user_nicename." <a href=\"#\" class=\"rmFromGroup\">x</a></li>";
         	} ?>
