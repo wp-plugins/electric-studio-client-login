@@ -68,16 +68,43 @@ class Escl_functions{
             return false;
         }
     }
+
+    /**
+     * 
+     * Method to flattern a multidimensional array
+     * @param array $array
+     */
+    function array_flatten_recursive($array) { 
+        if (!$array) return false;
+        $flat = array();
+        $RII = new RecursiveIteratorIterator(new RecursiveArrayIterator($array));
+        foreach ($RII as $value) $flat[] = $value;
+        return $flat;
+    }    
     
     function redirect_to_login(){
     	global $user_ID, $user_identity, $user_level, $wp_query;
     	$post_id = $wp_query->post->ID;
     	$groupsAllowed = get_post_meta($post_id, '_escl_groups');
-    	if($user_level < 10) //check that this is not the admin logged in
-    	    if(is_singular()) //check that this is a single post
-        		if((is_array($groupsAllowed[0]) && Escl_groups::user_in_group($user_identity,$groupsAllowed[0])==false))
+    	$ancestors = get_post_ancestors($wp_query->post->ID);
+    	if(is_array($ancestors)){ //there are ancestor pages
+    	    foreach($ancestors as $a){
+    	        $groupsAllowed = array_merge($groupsAllowed,get_post_meta($a, '_escl_groups')); //add ancestor's allowed groups
+    	    }
+    	    unset($a);
+    	}
+    	
+    	//flattern our array
+        $groupsAllowed = $this->array_flatten_recursive($groupsAllowed);
+
+         //check that this is not the admin logged in
+    	if($user_level < 10)
+    	    //check that this is a single post
+    	    if(is_singular()) 
+        		if((is_array($groupsAllowed) && Escl_groups::user_in_group($user_identity,$groupsAllowed)==false)){
                     //if user is not allowed to view this page, redirect to login
         			wp_redirect(wp_login_url(get_permalink($post_id)));
+        		}
     }
 
     /**
@@ -103,7 +130,7 @@ class Escl_functions{
     	
     			<form action="<?php bloginfo('url') ?>/wp-login.php" id="escl-login-form" method="post">
     				<p>
-    					<label for="log">User</label>
+    					<label for="log">Username</label>
     					<input type="text" name="log" id="log" value="<?php echo esc_html(stripslashes($user_login), 1) ?>" size="22" />
 					</p>
 					<p>
@@ -111,10 +138,10 @@ class Escl_functions{
     					<input type="password" name="pwd" id="pwd" size="22" />
     				</p>
     				<input type="submit" name="submit" value="Send" class="button" />
-    				<label for="rememberme"><input name="rememberme" id="rememberme" type="checkbox" checked="checked" value="forever" /> Remember me</label>
+    				<p><label for="rememberme"><input name="rememberme" id="rememberme" type="checkbox" checked="checked" value="forever" /> Remember me</label></p>
     				<input type="hidden" name="redirect_to" value="<?php echo $_SERVER['REQUEST_URI']; ?>"/>
     			</form>
-    			<ul>
+    			<ul class="escl-login-form-options">
     				<?php if ( get_option('users_can_register') ){ ?>
     					<li><a href="<?php bloginfo('url') ?>/wp-register.php">Register</a></li>
     				<?php } ?>
