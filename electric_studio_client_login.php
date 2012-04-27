@@ -2,8 +2,8 @@
 /*
 Plugin Name: Electric Studio Client Login
 Plugin URI: http://www.electricstudio.co.uk
-Description: Give clients a login area and allow administrators to control what content is viewable by which users
-Version: 0.7.5
+Description: Give clients a login area and allow administrators to control what content is viewable by which users and groups.
+Version: 0.8
 Author: James Irving-Swift
 Author URI: http://www.irving-swift.com
 License: GPL2
@@ -33,7 +33,6 @@ if($missingFiles){
 		fclose($handle);
 	}
 }
-
 include 'lib/install.php';
 include 'lib/options.php';
 include 'lib/functions.php';
@@ -42,12 +41,19 @@ include 'lib/user.php';
 include 'lib/ajax.php';
 include 'lib/metabox.php';
 
-
 /* Runs when plugin is activated */
-register_activation_hook(__FILE__,'electric_studio_client_login_install'); 
+register_activation_hook(ABSPATH.PLUGINDIR.'/electric-studio-client-login/electric_studio_client_login.php','escl_activate'); 
 
 /* Runs on plugin deactivation*/
-register_deactivation_hook( __FILE__, 'electric_studio_client_login_remove' );
+register_deactivation_hook(ABSPATH.PLUGINDIR.'/electric-studio-client-login/electric_studio_client_login.php', 'escl_deactivate' );
+
+function escl_activate(){
+    electric_studio_client_login_install();
+}
+
+function escl_deactivate(){
+    electric_studio_client_login_remove();
+}
 
 function escl_init(){
 	if(is_admin()){
@@ -67,21 +73,6 @@ add_action('init','escl_init');
 
 //array_push($wp_theme_directories, "/home/clients/public_html/development/wpcms/wp-content/plugins/electric-studio-client-login/templates/");
 
-
-function escl_widget_init(){
-	wp_register_sidebar_widget(
-		'escl_login_form',
-		__('Login'),
-		'escl_widget_login',
-		array(
-			'description' => 'Places a login form in the sidebar'
-		)
-	);
-}
-
-add_shortcode('escl-login', 'escl_custom_login');
-
-add_action("plugins_loaded", "escl_widget_init");
 
 function electric_studio_client_login()
 {

@@ -1,5 +1,4 @@
 <?php
-
 function electric_studio_client_login_install() {
 	global $plugindir;
 	global $wpdb;
@@ -52,6 +51,7 @@ function electric_studio_client_login_install() {
 }
 
 function electric_studio_client_login_remove() {
+    global $wpdb;
 	global $templateArray;
 	global $themeDir;
 	
@@ -62,7 +62,11 @@ function electric_studio_client_login_remove() {
 		}
 	}
 	
-	//@todo drop used tables
+	//drop added tables
+    $table1 = $wpdb->prefix."escl_user_group";
+    $table2 = $wpdb->prefix."escl_user_group_rel";
+	$wpdb->query("DROP TABLE IF EXISTS $table1");	
+	$wpdb->query("DROP TABLE IF EXISTS $table2");	
 	
 	/* Deletes the database field */
 	remove_role('client');
