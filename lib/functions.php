@@ -7,7 +7,7 @@ class Escl_functions{
         add_shortcode('escl_login_panel',array(&$this,'custom_login'));
         add_shortcode('escl-login', array(&$this,'custom_login'));
         add_action("plugins_loaded",array(&$this,"widget_init"));  
-        add_action('wp_head',array(&$this,'redirect_to_login'));
+        add_action('template_redirect',array(&$this,'redirect_to_login'));
     }
 
     function widget_init(){
@@ -78,7 +78,13 @@ class Escl_functions{
         if (!$array) return false;
         $flat = array();
         $RII = new RecursiveIteratorIterator(new RecursiveArrayIterator($array));
-        foreach ($RII as $value) $flat[] = $value;
+        foreach ($RII as $value)
+        	$flat[] = $value;
+        // Remove empty properties.
+        foreach ($flat as $key => $link){
+        	if ($flat[$key] == '')
+        		unset($flat[$key]);
+        }
         return $flat;
     }    
     
@@ -96,9 +102,9 @@ class Escl_functions{
     	
     	//flattern our array
         $groupsAllowed = $this->array_flatten_recursive($groupsAllowed);
-
+        
          //check that this is not the admin logged in
-    	if($user_level < 10)
+    	if(($user_level < 10) && (count($groupsAllowed) > 0))
     	    //check that this is a single post
     	    if(is_singular()) 
         		if((is_array($groupsAllowed) && Escl_groups::user_in_group($user_identity,$groupsAllowed)==false)){
@@ -107,6 +113,7 @@ class Escl_functions{
         		}
     }
 
+    
     /**
      * @method custom_login()
      * @since 0.8

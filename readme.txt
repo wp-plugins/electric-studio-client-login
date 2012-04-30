@@ -78,6 +78,9 @@ On activation of this plug, a template file is copy to your theme folder. Theref
 * Client setup page slightley redesigned
 * Restrictions on hierachical post types now affect their child posts
 
+= 0.8.1 =
+* Minor Bug Fixes
+
 == Upgrade Notice ==
 
 = 0.5 =
@@ -106,3 +109,6 @@ This is the 1st Beta.
 * Bug fixes
 * Admin interface redesign
 * Restrictions on hierachical post types now affect their child posts
+
+= 0.8.1 =
+* Minor Bug Fixes
