@@ -6,7 +6,7 @@ class Escl_functions{
         add_shortcode('escl_logged_in', array(&$this,'is_logged_in'));
         add_shortcode('escl_login_panel',array(&$this,'custom_login'));
         add_shortcode('escl-login', array(&$this,'custom_login'));
-        add_action("plugins_loaded",array(&$this,"widget_init"));  
+        add_action("plugins_loaded",array(&$this,"widget_init"));
         add_action('template_redirect',array(&$this,'redirect_to_login'));
     }
 
@@ -18,16 +18,16 @@ class Escl_functions{
     		array('description' => 'Places a login form in the sidebar')
     	);
     }
-    
+
     // [escl_logged_in]foo[/escl_logged_in]
     function is_logged_in($atts, $content=null){
     	if ( self::login_check($atts) )
     		return do_shortcode($content);
     	else
     		return "";
-    	
+
     }
-    
+
     //this is the callback function  for the login widget
     function widget_login($args) {
     	extract($args);
@@ -36,20 +36,20 @@ class Escl_functions{
     	self::custom_login();
     	echo $after_widget;
     }
-    
+
     function login_check($atts){
         global $user_ID, $user_identity, $user_level;
-         
+
         extract( shortcode_atts( array(
             'group' => array('escl_any'),
             'user' => 'escl_any',
             'userlevel' => 'escl_any'
         ), $atts));
-        
+
         if(!is_array($group)){
             $group = explode("|",$group);
         }
-        
+
         if ( is_user_logged_in() ) {
             //check the user's identity is ok
             if($user_level == 10){
@@ -70,11 +70,11 @@ class Escl_functions{
     }
 
     /**
-     * 
+     *
      * Method to flattern a multidimensional array
      * @param array $array
      */
-    function array_flatten_recursive($array) { 
+    function array_flatten_recursive($array) {
         if (!$array) return false;
         $flat = array();
         $RII = new RecursiveIteratorIterator(new RecursiveArrayIterator($array));
@@ -86,8 +86,8 @@ class Escl_functions{
         		unset($flat[$key]);
         }
         return $flat;
-    }    
-    
+    }
+
     function redirect_to_login(){
     	global $user_ID, $user_identity, $user_level, $wp_query;
     	$post_id = $wp_query->post->ID;
@@ -99,21 +99,21 @@ class Escl_functions{
     	    }
     	    unset($a);
     	}
-    	
+
     	//flattern our array
         $groupsAllowed = $this->array_flatten_recursive($groupsAllowed);
-        
+
          //check that this is not the admin logged in
     	if(($user_level < 10) && (count($groupsAllowed) > 0))
     	    //check that this is a single post
-    	    if(is_singular()) 
+    	    if(is_singular())
         		if((is_array($groupsAllowed) && Escl_groups::user_in_group($user_identity,$groupsAllowed)==false)){
                     //if user is not allowed to view this page, redirect to login
         			wp_redirect(wp_login_url(get_permalink($post_id)));
         		}
     }
 
-    
+
     /**
      * @method custom_login()
      * @since 0.8
@@ -132,9 +132,9 @@ class Escl_functions{
     				<li><a href="<?php bloginfo('url') ?>/wp-admin/profile.php"><?php echo __('Edit Profile')?></a></li>
     				<li><?php self::logout_link(); ?></li>
     			</ul>
-    	
+
     			<?php else : ?>
-    	
+
     			<form action="<?php bloginfo('url') ?>/wp-login.php" id="escl-login-form" method="post">
     				<p>
     					<label for="log">Username</label>
@@ -144,7 +144,7 @@ class Escl_functions{
     					<label for="pwd">Password</label>
     					<input type="password" name="pwd" id="pwd" size="22" />
     				</p>
-    				<input type="submit" name="submit" value="Send" class="button" />
+    				<input type="submit" name="submit" value="Log In" class="button" />
     				<p><label for="rememberme"><input name="rememberme" id="rememberme" type="checkbox" checked="checked" value="forever" /> Remember me</label></p>
     				<input type="hidden" name="redirect_to" value="<?php echo $_SERVER['REQUEST_URI']; ?>"/>
     			</form>
@@ -155,8 +155,8 @@ class Escl_functions{
     				<li><a href="<?php bloginfo('url') ?>/wp-login.php?action=lostpassword">Recover password</a></li>
     			<?php endif ?>
     			</ul>
-    <?php }    
-    
+    <?php }
+
     /**
      * @method lout_link()
      * @return echos html
@@ -166,9 +166,9 @@ class Escl_functions{
     function logout_link(){
         $vals = get_option('escl_general_settings');
         if($vals['escl_logout_redirect'] == 1){?>
-            <a href="<?php echo wp_logout_url( get_bloginfo('url') ); ?>" title="Logout">Logout</a>	
+            <a href="<?php echo wp_logout_url( get_bloginfo('url') ); ?>" title="Logout">Logout</a>
         <?php }else{ ?>
-        	<a href="<?php echo wp_logout_url( get_permalink() ); ?>" title="Logout">Logout</a>	
+        	<a href="<?php echo wp_logout_url( get_permalink() ); ?>" title="Logout">Logout</a>
         <?php }
     }
 
@@ -181,34 +181,34 @@ class Escl_functions{
     function get_client_area_perm(){
     	global $wpdb;
     	$pageTitle = 'Client Area';
-    	
+
     	$sql = "SELECT ID FROM $wpdb->posts
-    		WHERE ( post_name = '".$pageTitle."' OR post_title = '".$pageTitle."' ) 
+    		WHERE ( post_name = '".$pageTitle."' OR post_title = '".$pageTitle."' )
     		AND post_status = 'publish'
     		AND post_type='page'";
-    	
+
     	$sql = $wpdb->prepare($sql);
-    	
+
     	$pageID = $wpdb->get_var($sql);
-    	
+
     	return get_permalink($pageID);
     }
-    
+
 }
 
 $esclf = new Escl_functions();
 
 
 /* Start Compatability */
-/* these are functions which wouldn't work anymore due to the 
+/* these are functions which wouldn't work anymore due to the
  * functions now being methods within a class,
  * so these functions allow them to work as before
- * 
+ *
  * N.B. Do not use these functions as we plan on deprecating them
  */
 
 /**
- * 
+ *
  * For shortcode of text that should only be displayed to users that are logged in
  * @param unknown_type $atts
  * @param unknown_type $content
@@ -222,7 +222,7 @@ function escl_is_logged_in($atts,$content=null){
 }
 
 /**
- * 
+ *
  * Checks if a user is logged in
  * @param unknown_type $atts
  * @since 0.7
@@ -235,7 +235,7 @@ function escl_login_check($atts){
 }
 
 /**
- * 
+ *
  * Dependant on settings, redirects after login
  * @since 0.7.1
  * @deprecated
@@ -247,7 +247,7 @@ function escl_redirect_to_login(){
 }
 
 /**
- * 
+ *
  * Displays a link to logout
  * @since 0.7
  * @deprecated
@@ -259,7 +259,7 @@ function escl_logout_link(){
 }
 
 /**
- * 
+ *
  * Gets permalink of the clients area
  * @since 0.7
  * @deprecated
@@ -271,7 +271,7 @@ function escl_get_client_area_perm(){
 }
 
 /**
- * 
+ *
  * Displays the loginform / logged in menu
  * @since 0.7.1
  * @deprecated
@@ -283,7 +283,7 @@ function escl_custom_login(){
 }
 
 /**
- * 
+ *
  * this is the callback function for the login widget
  * @param unknown_type $args
  * @since 0.7.1
