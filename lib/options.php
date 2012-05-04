@@ -593,7 +593,6 @@ class Escl_options{
            $esclu = new Escl_user($user->ID);
            $esclu->addToGroup($group->group_id);
 
-           syslog(LOG_WARNING, "user added to group");
            return true;
     }
 }
