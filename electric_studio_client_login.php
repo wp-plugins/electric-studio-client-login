@@ -14,41 +14,44 @@ $plugindir = WP_PLUGIN_DIR.'/'.str_replace(basename( __FILE__),"",plugin_basenam
 
 include 'lib/escl_config.php';
 
-$missingFiles = false; //to stop a php warning for line 27 if there are no missing files
+function create_template_files(){
+    include 'lib/escl_config.php';
 
-//check for missing files (obviously, the first time this plugin is run, all the files will be missing.)
-foreach($templateArray as $tempFile){
-	if(!file_exists($themeDir.$tempFile)){
-		$missingFiles = true;
-	}
+    $missingFiles = false; //to stop a php warning for line 27 if there are no missing files
+
+    //check for missing files (obviously, the first time this plugin is run, all the files will be missing.)
+    foreach($templateArray as $tempFile){
+    	if(!file_exists($themeDir.$tempFile)){
+    		$missingFiles = true;
+    	}
+    }
+
+
+    //copy all template files to accommodate for the missing files
+    if($missingFiles){
+    	foreach($templateArray as $templateFile){
+    	    copy(dirname(__FILE__)."/".$pluginTemplateDir.$templateFile, $themeDir.$templateFile) or die ("Unable to copy Client Area template into theme. Please Check you have sufficent Privilages");
+    	}
+    }
 }
 
-//copy all template files to accomodate for the missing files
-if($missingFiles){
-	foreach($templateArray as $templateFile){
-		$data = file_get_contents($pluginTemplateDir.$templateFile);
-		$handle = fopen($themeDir.$templateFile, "w");
-		//echo $themeDir.$templateFile;
-		fwrite($handle, $data);
-		fclose($handle);
-	}
-}
-include 'lib/install.php';
-include 'lib/options.php';
-include 'lib/functions.php';
-include 'lib/groups.php';
-include 'lib/user.php';
-include 'lib/ajax.php';
-include 'lib/metabox.php';
+include_once 'lib/install.php';
+include_once 'lib/options.php';
+include_once 'lib/functions.php';
+include_once 'lib/groups.php';
+include_once 'lib/user.php';
+include_once 'lib/ajax.php';
+include_once 'lib/metabox.php';
 
 /* Runs when plugin is activated */
-register_activation_hook(ABSPATH.PLUGINDIR.'/electric-studio-client-login/electric_studio_client_login.php','escl_activate'); 
+register_activation_hook(ABSPATH.PLUGINDIR.'/electric-studio-client-login/electric_studio_client_login.php','escl_activate');
 
 /* Runs on plugin deactivation*/
 register_deactivation_hook(ABSPATH.PLUGINDIR.'/electric-studio-client-login/electric_studio_client_login.php', 'escl_deactivate' );
 
 function escl_activate(){
     electric_studio_client_login_install();
+    create_template_files();
 }
 
 function escl_deactivate(){
@@ -62,7 +65,6 @@ function escl_init(){
 		wp_register_script('escl-livesearch-js',get_bloginfo('wpurl').'/wp-content/plugins/electric-studio-client-login/js/escl_livesearch.js',array('jquery'));
 		wp_enqueue_script('escl-livesearch-js');
 	}
-	
 }
 
 add_action('init','escl_init');
@@ -78,6 +80,7 @@ function electric_studio_client_login()
 {
   echo get_option('OPTION_NAME');
 }
+
 
 
 

@@ -203,36 +203,36 @@ class Escl_options{
 
 	    	<div class='wrap'>
                 <div id="theme-options-wrap">
-            	<div class="icon32" id="icon-tools">
-            		<br />
-            	</div>
-            	<?php if(isset($_GET['esclg'])){?>
-            		<?php if($_GET['esclg']=="add"){?>
-                		<h2>Add Group</h2>
-                		<p><?php _e('Create a group.'); ?></p>
-                		<form method="post" action="admin.php?page=escl_group_options">
-                			<?php
-                			settings_fields('escl_add_group');
-                			do_settings_sections('escl_add_group')
-                			?>
-                		</form>
-                	<?php }elseif($_GET['esclg']=="edit"){?>
-                		<form method="post" action="admin.php?page=escl_group_options">
-                			<?php settings_fields('escl_edit_group'); ?>
-                			<?php do_settings_sections('escl_edit_group'); ?>
-                		</form>
-                	<?php  } ?>
-            	<?php }else{ ?>
-                	<h2>
-                		Group Management
-                		<a href="admin.php?page=escl_group_options&esclg=add" class="add-new-h2">Add New</a>
-                	</h2>
-                	<p><?php _e('Change the settings of groups here.'); ?></p>
-            	    		<div class=
-        	    		    <?php $this->create_groups_table()?>
-              		</div>
-          		<?php } ?>
-	    	</div>
+                	<div class="icon32" id="icon-tools">
+                		<br />
+                	</div>
+                	<?php if(isset($_GET['esclg'])){?>
+                		<?php if($_GET['esclg']=="add"){?>
+                    		<h2>Add Group</h2>
+                    		<p><?php _e('Create a group.'); ?></p>
+                    		<form method="post" action="admin.php?page=escl_group_options">
+                    			<?php
+                    			settings_fields('escl_add_group');
+                    			do_settings_sections('escl_add_group')
+                    			?>
+                    		</form>
+                    	<?php }elseif($_GET['esclg']=="edit"){?>
+                    		<form method="post" action="admin.php?page=escl_group_options">
+                    			<?php settings_fields('escl_edit_group'); ?>
+                    			<?php do_settings_sections('escl_edit_group'); ?>
+                    		</form>
+                    	<?php  } ?>
+                	<?php }else{ ?>
+                    	<h2>
+                    		Group Management
+                    		<a href="admin.php?page=escl_group_options&esclg=add" class="add-new-h2">Add New</a>
+                    	</h2>
+                    	<p><?php _e('Change the settings of groups here.'); ?></p>
+           	    		<div class="groups_table">
+            	    		    <?php $this->create_groups_table(); ?>
+            	    	</div>
+              		<?php } ?>
+    	    	</div>
     	<?php
     }
 
@@ -445,8 +445,9 @@ class Escl_options{
         			echo "\">";
         			echo "<td>".$group->group_name."</td>
         		    				<td>".$group->group_slug."</td>
-        		    				<td>".$group->group_status."</td>
-        		    				<td><a href='admin.php?page=escl_group_options&esclg=edit&escl_slug=".$group->group_slug."'>Edit</a> | <a href='admin.php?page=escl_group_options&delete_group=".$group->group_slug."' onclick='return confirm(\"Are you sure you want to delete group $group->group_name?\")'>Delete</a></td>";
+        		    				<td>".$group->group_status."</td>";
+        			if($group->group_lock == 0)
+                        echo "<td><a href='admin.php?page=escl_group_options&esclg=edit&escl_slug=".$group->group_slug."'>Edit</a> | <a href='admin.php?page=escl_group_options&delete_group=".$group->group_slug."' onclick='return confirm(\"Are you sure you want to delete group $group->group_name?\")'>Delete</a></td>";
         			echo "</tr>";
         		} ?>
         	</table>

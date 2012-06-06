@@ -1,5 +1,5 @@
 === Plugin Name ===
-Contributors: irvingswiftj, Electric Studio
+Contributors: irvingswiftj, Matthew Burrows, Electric Studio
 Tags: clients, users, roles, groups
 Requires at least: 3.1
 Tested up to: 3.3.1
@@ -80,6 +80,9 @@ On activation of this plug, a template file is copy to your theme folder. Theref
 
 = 0.8.1 =
 * Minor Bug Fixes
+* Changed method in which files are copied during activation (you shouldn't see headers already sent error when activatinga anymore)
+* Clients Area page showing blank has be resolved
+* There is now a default group in which all clients are automatically a member. 
 
 == Upgrade Notice ==
 
