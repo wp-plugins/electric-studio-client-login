@@ -14,7 +14,7 @@ class Escl_ajax{
         	add_action('wp_ajax_esclremoveuserfromgroup',array(&$this,'removeuserfromgroup'));
         }
     }
-    
+
     function print_livesearchjs(){
     	//nonces for ajax
     	$esclLiveSearch_nonce = wp_create_nonce('esclLS');
@@ -47,7 +47,7 @@ class Escl_ajax{
     				}
     			});
     		}
-    		
+
     		function escl_addusertogroup(userid) {
     			jQuery.ajax({
     				type: "post",
@@ -73,7 +73,7 @@ class Escl_ajax{
     				}
     			});
     		}
-		
+
     		function escl_removeuserfromgroup(userid) {
     			jQuery.ajax({
     				type: "post",
@@ -94,7 +94,6 @@ class Escl_ajax{
     					jQuery('ul#group-user-list li.userid-' + userid).fadeOut(function () {
     						jQuery(this).remove();
     					});
-    					alert(html);
     				},
     				error: function () {
     					alert('There has been an error, Please try again');
@@ -103,8 +102,8 @@ class Escl_ajax{
     			});
     		}
     	</script>
-    <?php } 
-    
+    <?php }
+
     function userlivesearch(){
     	wp_nonce_field('esclLS');
     	$clients = escl_get_users(array(
@@ -112,17 +111,17 @@ class Escl_ajax{
     		'search' => '*'.$_POST['criteria'].'*'
     		)
     	);
-    
+
     	$html .= '<ul>';
     	foreach($clients as $client){
     		$html.=	'<li class="'.$client->user_nicename.'-'.$client->ID.'"><a href="#" class="liveUserResult userID-'.$client->ID.'">'.$client->display_name.'</a></li>'."\n";
     	}
     	$html .= '</ul>';
-    			
+
     	echo $html;
     	die;
     }
-    
+
     function addusertogroup(){
     	wp_nonce_field('esclu2gadd');
     	$user = new Escl_user($_POST['userid']);
@@ -131,13 +130,13 @@ class Escl_ajax{
     	echo $user->get('user_login');
     	die;
     }
-    
+
     function removeuserfromgroup(){
     	wp_nonce_field('esclufgrm');
     	$user = new Escl_user($_POST['userid']);
     	$groupinfo = Escl_groups::get_group_data($_POST['groupslug']);
     	$user->RemoveFromGroup($groupinfo->group_id);
-    	die;	
+    	die;
     }
 
 }
