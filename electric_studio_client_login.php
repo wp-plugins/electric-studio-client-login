@@ -3,7 +3,7 @@
 Plugin Name: Electric Studio Client Login
 Plugin URI: http://www.electricstudio.co.uk
 Description: Give clients a login area and allow administrators to control what content is viewable by which users and groups.
-Version: 0.8.1
+Version: 0.8
 Author: James Irving-Swift
 Author URI: http://www.irving-swift.com
 License: GPL2
