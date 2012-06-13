@@ -1,59 +1,89 @@
 <?php
+class Escl_user extends WP_User{
 
-add_shortcode('escl_logged_in', 'escl_is_logged_in');
-add_action('template_redirect','escl_redirect_to_login');
+    /**
+     * 
+     * Method to add user to a group
+     * @method addToGroup
+     * @param ID $groupid
+     * @return N/A
+     * @since 0.8
+     */
+    function addToGroup($groupid){
+        global $wpdb;
+    	
+        $user = get_userdata($this->get('ID'));
+        
+    	$groupinfo = Escl_groups::get_group_data_from_id($groupid);
+    	
+    	$sql = "INSERT INTO ".$wpdb->prefix."escl_user_group_rel (group_id, user_login)
+    			VALUES ($groupid,'".$user->user_login."')";
 
-// [escl_logged_in]foo[/escl_logged_in]
-function escl_is_logged_in($atts, $content=null){
-	if ( escl_login_check($atts) )
-		return do_shortcode($content);
-	else
-		return "";
-	
-}
-
-
-function escl_login_check($atts){
-    global $user_ID, $user_identity, $user_level;
-     
-    extract( shortcode_atts( array(
-        'group' => array('escl_any'),
-        'user' => 'escl_any',
-        'userlevel' => 'escl_any'
-    ), $atts));
-    
-    if(!is_array($group)){
-        $group = explode("|",$group);
+    	$sql = $wpdb->prepare($sql);
+    	
+    	if(!Escl_groups::user_in_group($userlogin,$groupinfo->group_slug)){ //check that user does not already exist in group
+    		$wpdb->query($sql);
+    	}
     }
     
-    if ( is_user_logged_in() ) {
-        //check the user's identity is ok
-        if($user_level == 10){
-            return true;
-        }
-        else if($user == 'escl_any' || $user == $user_identity){
-            //check that the user level is high enough
-            if($userlevel == 'escl_any' || $userlevel > $user_level){
-                //check that user group is allowed
-                if(in_array('escl_any',$group) || escl_user_in_group($user_identity,$group) == true){
-                    return true;
-                }
-            }
-        }
-    }else{
-        return false;
+    /**
+     * 
+     * To remove user from a group
+     * @method RemoveFromGroup
+     * @param ID $groupid
+     * @return N/A
+     * @since 0.8
+     */
+    
+    function RemoveFromGroup($groupid){
+        global $wpdb;
+
+        $user = get_userdata($this->get('ID'));
+
+    	$sql = "DELETE FROM ".$wpdb->prefix."escl_user_group_rel WHERE group_id = '$groupid' and user_login = '".$user->user_login."'";
+    	
+    	$sql = $wpdb->prepare($sql);
+    	
+    	$wpdb->query($sql);
     }
+    
+    /**
+     * 
+     * To get an array of objects each object being a group in which the user is a member of
+     * @method listGroups
+     * @since 0.8
+     * @return array of objects
+     */
+    function listGroups(){
+        global $wpdb;
+
+        $user = get_userdata($this->get('ID'));
+
+    	$sql = "SELECT gro.group_name, gro.group_slug, gro.group_status FROM ".$wpdb->prefix."escl_user_group_rel as rel 
+    				JOIN ".$wpdb->prefix."escl_user_group as gro
+    				ON gro.group_id = rel.group_id
+    				WHERE rel.user_login = '".$user->user_login."'";
+    	
+    	$sql = $wpdb->prepare($sql);
+    	
+    	return $wpdb->get_results($sql);
+    	
+    }
+    
 }
 
-function escl_redirect_to_login(){
-	global $user_ID, $user_identity, $user_level, $wp_query;
-	$post_id = $wp_query->post->ID;
-	$groupsAllowed = get_post_meta($post_id, '_escl_groups');
-	if($user_level < 10) //check that this is not the admin logged in
-		if((is_array($groupsAllowed[0]) && escl_user_in_group($user_identity,$groupsAllowed[0])==false))
-            //if user is not allowed to view this page, redirect to login
-			wp_redirect(wp_login_url(get_permalink($post_id)));
+
+class Escl_User_Query extends WP_User_Query{
+    
 }
 
+/* User Functions */
 
-
+function escl_get_users( $args = array() ) {
+    $args = wp_parse_args( $args );
+    $args['count_total'] = false;
+    
+    $user_search = new Escl_User_Query($args);
+    
+    return (array) $user_search->get_results();
+}
