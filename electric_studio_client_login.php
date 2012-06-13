@@ -3,7 +3,7 @@
 Plugin Name: Electric Studio Client Login
 Plugin URI: http://www.electricstudio.co.uk
 Description: Give clients a login area and allow administrators to control what content is viewable by which users and groups.
-Version: 0.8
+Version: 0.8.1
 Author: James Irving-Swift
 Author URI: http://www.irving-swift.com
 License: GPL2
@@ -42,7 +42,7 @@ include 'lib/ajax.php';
 include 'lib/metabox.php';
 
 /* Runs when plugin is activated */
-register_activation_hook(ABSPATH.PLUGINDIR.'/electric-studio-client-login/electric_studio_client_login.php','escl_activate'); 
+register_activation_hook(ABSPATH.PLUGINDIR.'/electric-studio-client-login/electric_studio_client_login.php','escl_activate');
 
 /* Runs on plugin deactivation*/
 register_deactivation_hook(ABSPATH.PLUGINDIR.'/electric-studio-client-login/electric_studio_client_login.php', 'escl_deactivate' );
@@ -62,7 +62,7 @@ function escl_init(){
 		wp_register_script('escl-livesearch-js',get_bloginfo('wpurl').'/wp-content/plugins/electric-studio-client-login/js/escl_livesearch.js',array('jquery'));
 		wp_enqueue_script('escl-livesearch-js');
 	}
-	
+
 }
 
 add_action('init','escl_init');
